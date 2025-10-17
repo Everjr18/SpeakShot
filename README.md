@@ -1,6 +1,6 @@
 # Prompt maestro — Next.js + Supabase Auth Boilerplate
 
-> Boilerplate pedagógico con Next.js 15 (App Router) + Supabase Auth (Google + email/password + magic link opcional), shadcn/ui, Server Actions, Docker, CI/CD (GitHub Actions → GHCR + deploy por SSH) y MCP de Supabase. Lista para clonar, completar variables y poner en producción.
+> Boilerplate pedagógico con Next.js 14 (App Router) + Supabase Auth (Google + email/password + magic link opcional), shadcn/ui, Server Actions, Docker, CI/CD (GitHub Actions → GHCR + deploy por SSH) y MCP de Supabase. Lista para clonar, completar variables y poner en producción.
 
 ```
 Next.js App Router
@@ -150,32 +150,34 @@ curl http://localhost:3000/api/health
 docker compose down
 ```
 
-## 9. CI/CD (GitHub Actions → GHCR + SSH)
+## 9. CI/CD (GitHub Actions → GHCR + Swarm `docker service update`)
 
 Archivo: `.github/workflows/deploy.yml`.
 
-1. Job `test`: `npm ci`, `typecheck`, `lint`, `vitest`, `playwright` (en modo opt-in: puedes completar pruebas después).
-2. Job `build-and-deploy`:
-   - Login a GHCR con `${{ secrets.GITHUB_TOKEN }}`.
-   - Build & push imagen `latest` y `${{ github.sha }}`.
-   - Deploy SSH (appleboy/ssh-action):
-     - Crea carpeta destino (`SSH_PATH`).
-     - Subir `.env` y `docker-compose.yml` via secrets (`ENV_FILE`, `COMPOSE_FILE`).
-     - `docker compose pull && up -d`.
-     - Limpieza de imágenes huérfanas.
-   - Healthcheck remoto.
-   - Sube script de rollback.
+1. Se ejecuta en cada `push` a `master` (o manual vía `workflow_dispatch`).
+2. Pasos principales:
+   - `docker login ghcr.io` usando `GHCR_USERNAME` + `GHCR_TOKEN`.
+   - `docker build` + `docker push` a `ghcr.io/everjr18/speakshot:latest`.
+   - `ssh` al manager de tu Swarm y ejecutar:
+     ```bash
+     docker service update \
+       --with-registry-auth \
+       --image ghcr.io/everjr18/speakshot:latest \
+       --force speakshot_web
+     ```
+     (Puedes cambiar `speakshot_web` por el nombre real de tu servicio).
 
-### Secrets necesarios
+### Secrets necesarios (GitHub → Settings → Secrets and variables → Actions)
 
 | Secret | Descripción |
 | --- | --- |
-| `SSH_HOST`, `SSH_USER`, `SSH_PORT` (opcional) | VPS destino. |
-| `SSH_PRIVATE_KEY` | Llave privada (Formateada PEM). |
-| `SSH_PATH` | Ruta de despliegue (coincidir con `.env`). |
-| `ENV_FILE` | Contenido completo del `.env` (formato heredoc). |
-| `COMPOSE_FILE` | Contenido de `docker-compose.yml` (puedes reutilizar el repo o personalizar). |
-| `ROLLBACK_SCRIPT` | Opcional: script `scripts/rollback.sh` si quieres sobreescribir en servidor. |
+| `GHCR_USERNAME` | Usuario de GitHub con permiso `write:packages`. |
+| `GHCR_TOKEN` | PAT con `write:packages` (para publicar en GHCR). |
+| `SSH_HOST` | IP o dominio del nodo manager. |
+| `SSH_USER` | Usuario SSH (root o equivalente). |
+| `SSH_KEY` | Clave privada en formato PEM con acceso al servidor. |
+
+> Nota: asegúrate de que el nodo manager pueda hacer `docker login ghcr.io` con el mismo token (el workflow ya ejecuta `docker login` remoto antes de actualizar el servicio).
 
 ## 10. MCP de Supabase
 

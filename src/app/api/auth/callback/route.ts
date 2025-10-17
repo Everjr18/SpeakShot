@@ -5,15 +5,7 @@ import { env } from "@/lib/env";
 import type { Database } from "@/lib/supabase/types";
 
 export async function GET(request: NextRequest) {
-  const supabase = createRouteHandlerClient<Database>(
-    { cookies },
-    {
-      options: {
-        supabaseUrl: env.NEXT_PUBLIC_SUPABASE_URL,
-        supabaseKey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      },
-    },
-  );
+  const supabase = createRouteHandlerClient<Database>({ cookies });
 
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");

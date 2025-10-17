@@ -1,7 +1,6 @@
 "use server";
 
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -16,16 +15,8 @@ export type AuthActionResponse = {
 const emailSchema = z.string().email();
 const passwordSchema = z.string().min(6);
 
-function getSupabaseActionClient(): SupabaseClient<Database> {
-	return createServerActionClient<Database>(
-		{ cookies },
-		{
-			options: {
-				supabaseUrl: env.NEXT_PUBLIC_SUPABASE_URL,
-				supabaseKey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-			},
-		},
-	);
+function getSupabaseActionClient() {
+  return createServerActionClient<Database>({ cookies });
 }
 
 export async function signInWithGoogle(): Promise<AuthActionResponse> {

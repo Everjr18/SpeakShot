@@ -1,21 +1,28 @@
 "use client";
 
-import { createBrowserClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const rawSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const rawSupabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!rawSupabaseUrl || !rawSupabaseAnonKey) {
   throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY.");
 }
+
+const supabaseUrl = rawSupabaseUrl;
+const supabaseAnonKey = rawSupabaseAnonKey;
 
 let client: SupabaseClient<Database> | undefined;
 
 export function getSupabaseBrowserClient(): SupabaseClient<Database> {
   if (!client) {
-    client = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+    client = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+      },
+    }) as unknown as SupabaseClient<Database>;
   }
   return client;
 }

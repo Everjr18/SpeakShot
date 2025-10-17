@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 224 71% 4%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 8% 46%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 224 71% 4%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 221 83% 53%;
+  --accent: 220 14% 96%;
+  --accent-foreground: 224 71% 4%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 221 83% 53%;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 221 39% 7%;
+  --foreground: 210 40% 98%;
+  --muted: 218 22% 14%;
+  --muted-foreground: 215 20% 65%;
+  --popover: 221 39% 7%;
+  --popover-foreground: 210 40% 98%;
+  --card: 221 39% 7%;
+  --card-foreground: 210 40% 98%;
+  --border: 217 19% 18%;
+  --input: 217 19% 18%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 11%;
+  --secondary: 218 22% 14%;
+  --secondary-foreground: 210 40% 98%;
+  --accent: 218 22% 14%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 63% 49%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 217 91% 60%;
+}
+
+* {
+  @apply border-border;
+}
+
+body {
+  @apply bg-background text-foreground;
+}
+
+a {
+  @apply text-primary underline-offset-4 transition hover:underline;
+}

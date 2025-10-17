@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "clients": [
+    {
+      "name": "supabase",
+      "description": "Supabase MCP Server (self-hosted SQL)",
+      "command": "npx",
+      "args": ["-y", "supabase-mcp@latest"],
+      "env": {
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}",
+        "ALLOW_WRITE": "${MCP_ALLOW_WRITE}"
+      },
+      "capabilities": {
+        "sql": {
+          "allow_write": false
+        }
+      }
+    }
+  ]
+}

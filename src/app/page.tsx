@@ -14,7 +14,7 @@ export default function HomePage() {
     <div className="mx-auto flex max-w-3xl flex-col gap-8">
       <header className="space-y-4 text-center">
         <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-          Prueba
+          Test
         </h1>
         <p className="text-muted-foreground">
           Usa este punto de partida para crear productos SaaS rápidos: autenticación

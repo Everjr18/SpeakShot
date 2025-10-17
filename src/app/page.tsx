@@ -45,7 +45,7 @@ export default function HomePage() {
           <CardHeader>
             <CardTitle>Autenticación híbrida</CardTitle>
             <CardDescription>
-              Google OAuth + email/password + magic link (flag) con Server Actions.
+              Google OAuth + email/password con Server Actions.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">

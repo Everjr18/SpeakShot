@@ -14,7 +14,3 @@ export const signUpSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
-
-export const magicLinkSchema = z.object({
-  email: emailSchema,
-});

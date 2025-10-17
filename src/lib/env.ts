@@ -21,11 +21,6 @@ const envSchema = z.object({
   SSH_USER: z.string().optional(),
   SSH_PORT: z.string().optional().default("22"),
   SSH_PATH: z.string().optional(),
-  SENTRY_DSN: z.string().optional(),
-  POSTHOG_KEY: z.string().optional(),
-  POSTHOG_HOST: z.string().optional(),
-  ENABLE_MAGIC_LINK: booleanString,
-  ENABLE_POSTHOG: booleanString,
 });
 
 const parsed = envSchema.safeParse({
@@ -43,11 +38,6 @@ const parsed = envSchema.safeParse({
   SSH_USER: process.env.SSH_USER,
   SSH_PORT: process.env.SSH_PORT,
   SSH_PATH: process.env.SSH_PATH,
-  SENTRY_DSN: process.env.SENTRY_DSN,
-  POSTHOG_KEY: process.env.POSTHOG_KEY,
-  POSTHOG_HOST: process.env.POSTHOG_HOST,
-  ENABLE_MAGIC_LINK: process.env.ENABLE_MAGIC_LINK,
-  ENABLE_POSTHOG: process.env.ENABLE_POSTHOG,
 });
 
 if (!parsed.success) {

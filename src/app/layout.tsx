@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Prompt maestro — Supabase Auth Starter",
   description:
-    "Next.js 14 + Supabase Auth (Google, email, magic link), shadcn/ui, Docker y CI/CD listos para producción.",
+    "Next.js 14 + Supabase Auth (Google y email/password), shadcn/ui, Docker y CI/CD listos para producción.",
 };
 
 export default function RootLayout({

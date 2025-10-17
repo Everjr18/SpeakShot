@@ -1,12 +1,12 @@
 # Prompt maestro — Next.js + Supabase Auth Boilerplate
 
-> Boilerplate pedagógico con Next.js 14 (App Router) + Supabase Auth (Google + email/password + magic link opcional), shadcn/ui, Server Actions, Docker, CI/CD (GitHub Actions → GHCR + deploy por SSH) y MCP de Supabase. Lista para clonar, completar variables y poner en producción.
+> Boilerplate pedagógico con Next.js 14 (App Router) + Supabase Auth (Google + email/password), shadcn/ui, Server Actions, Docker, CI/CD (GitHub Actions → GHCR + deploy por SSH) y MCP de Supabase. Lista para clonar, completar variables y poner en producción.
 
 ```
 Next.js App Router
 │
 ├─ Supabase (Auth + DB + MCP)
-│   ├─ Google OAuth + email/password + magic link (flag)
+│   ├─ Google OAuth + email/password
 │   └─ Tabla `profiles` con RLS owner-only
 │
 ├─ UI shadcn + Tailwind + sonner
@@ -47,9 +47,6 @@ Next.js App Router
 | `SUPABASE_URL` | URL base de tu instancia (self-host) o reutiliza la del cloud. |
 | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID` | Solo cloud: para Management API (PAT + ID). |
 | `MCP_ALLOW_WRITE` | `true` solo si quieres habilitar SQL de escritura en MCP. |
-| `DOCKER_IMAGE` | Imagen GHCR de producción, ej. `ghcr.io/tu-org/tu-repo:latest`. |
-| `SSH_*` | VPS destino para deploy (host, user, puerto, path). |
-| Flags opcionales (`ENABLE_MAGIC_LINK`, `ENABLE_POSTHOG`, etc.) |
 
 ## 3. Inicializar Supabase
 
@@ -118,13 +115,12 @@ npm run dev          # http://localhost:3000
 Flujos a probar:
 - `/login` → botón “Continuar con Google”.
 - Formulario email/password (tabs Sign-in / Sign-up).
-- Si `ENABLE_MAGIC_LINK=true`, pestaña “Magic Link”.
 - Dashboard protegido (`/dashboard`), con tarjeta de perfil y botón Sign out.
 - Navbar incluye toggle de tema (next-themes + shadcn).
 
 ## 6. Server Actions clave
 
-- `src/app/(auth)/login/actions.ts`: sign-in Google, email/password, sign-up y magic link. Usa `createServerActionClient` y cookies de Supabase.
+- `src/app/(auth)/login/actions.ts`: sign-in Google, email/password y sign-up. Usa `createServerActionClient` y cookies de Supabase.
 - `src/components/layout/Navbar.tsx`: Server Component que obtiene sesión y expone acción de sign out (`"use server"`).
 - `src/app/dashboard/page.tsx`: Server Component protegido, redirige si no hay sesión.
 
@@ -206,7 +202,7 @@ npx supabase-mcp@latest
 
 1. `npm run dev` → completa `.env`, realiza login con Google.
 2. Email/password sign-in y sign-up → verifica toasts de éxito/error.
-3. Magic link (si `ENABLE_MAGIC_LINK=true`) → recibir correo y validar redirección a `/dashboard`.
+3. Registro por email/password → confirma correo recibido y acceso a `/dashboard`.
 4. Sign out desde el menú de usuario → redirige a `/login`.
 5. `docker compose up` → app disponible en `http://localhost:3000`.
 6. Ejecuta workflow `deploy` con secrets completos → comprueba app en VPS.

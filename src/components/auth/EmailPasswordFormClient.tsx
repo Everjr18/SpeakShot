@@ -16,18 +16,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  magicLinkSchema,
-  signInSchema,
-  signUpSchema,
-} from "@/lib/validations/auth";
-import type { AuthActionResponse } from "./EmailPasswordForm";
+import { signInSchema, signUpSchema } from "@/lib/validations/auth";
+import type { AuthActionResponse } from "@/app/(auth)/login/actions";
 
 type EmailPasswordFormClientProps = {
-  enableMagicLink: boolean;
   signInAction: (values: SignInValues) => Promise<AuthActionResponse>;
   signUpAction: (values: SignInValues) => Promise<AuthActionResponse>;
-  magicLinkAction: (values: MagicLinkValues) => Promise<AuthActionResponse>;
 };
 
 type SignInValues = {
@@ -35,17 +29,11 @@ type SignInValues = {
   password: string;
 };
 
-type MagicLinkValues = {
-  email: string;
-};
-
 export default function EmailPasswordFormClient({
-  enableMagicLink,
   signInAction,
   signUpAction,
-  magicLinkAction,
 }: EmailPasswordFormClientProps) {
-  const [activeTab, setActiveTab] = useState<"signin" | "signup" | "magic">("signin");
+  const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
 
   return (
     <Tabs
@@ -53,10 +41,9 @@ export default function EmailPasswordFormClient({
       onValueChange={(value) => setActiveTab(value as typeof activeTab)}
       className="space-y-4"
     >
-      <TabsList className={`grid w-full ${enableMagicLink ? "grid-cols-3" : "grid-cols-2"}`}>
+      <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="signin">Iniciar sesión</TabsTrigger>
         <TabsTrigger value="signup">Crear cuenta</TabsTrigger>
-        {enableMagicLink && <TabsTrigger value="magic">Magic link</TabsTrigger>}
       </TabsList>
 
       <TabsContent value="signin">
@@ -74,12 +61,6 @@ export default function EmailPasswordFormClient({
           successMessage="Usuario creado. Revisa tu correo para verificar la cuenta."
         />
       </TabsContent>
-
-      {enableMagicLink && (
-        <TabsContent value="magic">
-          <MagicLinkForm action={magicLinkAction} />
-        </TabsContent>
-      )}
     </Tabs>
   );
 }
@@ -172,71 +153,6 @@ function PasswordForm({ mode, action, successMessage }: PasswordFormProps) {
             "Iniciar sesión"
           ) : (
             "Crear cuenta"
-          )}
-        </Button>
-      </form>
-    </Form>
-  );
-}
-
-type MagicLinkFormProps = {
-  action: (values: MagicLinkValues) => Promise<AuthActionResponse>;
-};
-
-function MagicLinkForm({ action }: MagicLinkFormProps) {
-  const [isPending, startTransition] = useTransition();
-
-  const form = useForm<MagicLinkValues>({
-    resolver: zodResolver(magicLinkSchema),
-    defaultValues: { email: "" },
-  });
-
-  const onSubmit = (values: MagicLinkValues) => {
-    startTransition(async () => {
-      const response = await action(values);
-      if (response.success) {
-        toast.success(response.message);
-        form.reset();
-      } else {
-        toast.error(response.message);
-      }
-    });
-  };
-
-  return (
-    <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Correo electrónico</FormLabel>
-              <FormControl>
-                <div className="relative flex items-center">
-                  <Mail className="absolute left-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    {...field}
-                    type="email"
-                    placeholder="tucorreo@ejemplo.com"
-                    className="pl-9"
-                    autoComplete="email"
-                  />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Enviando magic link...
-            </>
-          ) : (
-            "Enviar magic link"
           )}
         </Button>
       </form>

@@ -16,7 +16,7 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "format": "prettier --write .",
-    "prepare": "playwright install --with-deps"
+    "prepare": "node scripts/prepare-playwright.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

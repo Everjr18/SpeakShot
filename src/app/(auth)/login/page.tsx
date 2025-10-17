@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { flags } from "@/lib/flags";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export default async function LoginPage() {
@@ -43,7 +42,7 @@ export default async function LoginPage() {
             </span>
           </div>
 
-          <EmailPasswordForm enableMagicLink={flags.enableMagicLink} />
+          <EmailPasswordForm />
         </CardContent>
       </Card>
 
